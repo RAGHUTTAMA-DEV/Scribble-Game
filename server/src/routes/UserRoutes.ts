@@ -1,13 +1,14 @@
 import express from 'express';
-import { SignUp, SignIn, UpdateUser, DeleteUser, GetUser } from '../controllers/UserController';
+import {createRoom,joinRoom,leaveRoom,startGame} from '../controllers/RoomController';
 
-const router = express.Router();
+const router=express.Router();
 
-router.post('/signup', SignUp as express.RequestHandler);
-router.post('/signin', SignIn as express.RequestHandler);
-router.put('/update/:username', UpdateUser as express.RequestHandler);
-router.delete('/delete/:username', DeleteUser as express.RequestHandler);
-router.get('/get/:username', GetUser as express.RequestHandler);
+
+router.post('/create-room/',createRoom);
+router.post('join-room/:roomName',joinRoom);
+router.post('/leave-room/:roomName',leaveRoom);
+router.post('/start-game/:roomName',startGame);
+
+
 
 export default router;
-

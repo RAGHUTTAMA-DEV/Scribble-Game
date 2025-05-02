@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { connectDB,PORT } from './config/db';
 import cors from 'cors';
 import nothing from 'socket.io'
-import UserRouter from './routes/UserRoutes';
+import AuthRouter from './routes/AuthRoutes';
 
 
 const app=express();
@@ -11,7 +11,7 @@ const app=express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/api',UserRouter)
+app.use('/api/auth',AuthRouter)
 
 
 async function main(){
