@@ -12,25 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const db_1 = require("./config/db");
-const cors_1 = __importDefault(require("cors"));
-const UserRoutes_1 = __importDefault(require("./routes/UserRoutes"));
-const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
-app.use(express_1.default.json());
-app.use('/api', UserRoutes_1.default);
-function main() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            yield (0, db_1.connectDB)();
-            app.listen(db_1.PORT, () => {
-                console.log(`Server is running on port ${db_1.PORT}`);
-            });
-        }
-        catch (error) {
-            console.log("Error internal issuse", error);
-        }
-    });
-}
-main();
+exports.connectDB = exports.PORT = void 0;
+const mongoose_1 = __importDefault(require("mongoose"));
+exports.PORT = process.env.PORT || 5000;
+const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const uri = process.env.MONGO_URI || '';
+        yield mongoose_1.default.connect(uri);
+        console.log('MongoDB connected successfully');
+    }
+    catch (error) {
+        console.error('Error connecting to MongoDB:', error);
+        throw error;
+    }
+});
+exports.connectDB = connectDB;

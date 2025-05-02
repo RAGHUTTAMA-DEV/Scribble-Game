@@ -14,7 +14,15 @@ app.use(express.json());
 app.use('/api',UserRouter)
 
 
+async function main(){
+    try{
+        await connectDB();
+        app.listen(PORT,()=>{
+            console.log(`Server is running on port ${PORT}`);
+        })
+    }catch(error:any){
+        console.log("Error internal issuse",error);
+    }
+}
 
-app.listen(PORT,()=>{
-    console.log(`Server is running on port ${PORT}`);
-})
+main();

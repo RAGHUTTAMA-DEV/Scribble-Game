@@ -1,9 +1,14 @@
-import express from 'express';
 import mongoose from 'mongoose';
 
-export const MongoURl = process.env.MONGO_URL || 'mongodb://localhost:27017/myapp';
 export const PORT = process.env.PORT || 5000;
-export const connectDB=async ()=>{
-    await mongoose.connect(MongoURl);
+
+export const connectDB = async () => {
+  try {
+    const uri = process.env.MONGO_URI || 'mongodb+srv://raghuttama03:samera2007@cluster0.sylhh.mongodb.net/scribble';
+    await mongoose.connect(uri );
     console.log('MongoDB connected successfully');
-}
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+    throw error;
+  }
+};
