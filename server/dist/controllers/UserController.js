@@ -19,6 +19,7 @@ exports.DeleteUser = DeleteUser;
 exports.GetUser = GetUser;
 const UserModel_1 = __importDefault(require("../models/UserModel"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const db_1 = require("../config/db");
 function SignUp(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -51,6 +52,7 @@ function SignIn(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const { username, password } = req.body;
+            console.log(req.body);
             const user = yield UserModel_1.default.findOne({ username });
             if (!user) {
                 return res.status(400).json({ message: "User not found" });
@@ -59,7 +61,7 @@ function SignIn(req, res) {
             if (!isCorrect) {
                 return res.status(400).json({ message: "Incorrect password" });
             }
-            const token = jsonwebtoken_1.default.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+            const token = jsonwebtoken_1.default.sign({ username: user.username }, db_1.Jwt_Secret, { expiresIn: "1h" });
             return res.status(200).json({ token, message: "User logged in successfully" });
         }
         catch (error) {
@@ -72,7 +74,7 @@ function UpdateUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const updatedata = req.body;
-            const username = req.query.username;
+            const username = req.params.username;
             const user = yield UserModel_1.default.findOne({ username });
             if (!user) {
                 return res.status(400).json({ message: "User not found" });
@@ -89,7 +91,7 @@ function UpdateUser(req, res) {
 function DeleteUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const username = req.query.username;
+            const username = req.params.username;
             const user = yield UserModel_1.default.findOneAndDelete({ username });
             if (!user) {
                 return res.status(400).json({ message: "User not found" });
@@ -105,7 +107,7 @@ function DeleteUser(req, res) {
 function GetUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const username = req.query.username;
+            const username = req.params.username;
             const isuser = yield UserModel_1.default.findOne({ username });
             if (!isuser) {
                 return res.status(400).json({ message: "User not found" });

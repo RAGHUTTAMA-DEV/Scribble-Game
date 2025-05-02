@@ -1,6 +1,8 @@
 import UserModel from "../models/UserModel";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { Jwt_Secret } from "../config/db";
+
 export async function SignUp(req:Request,res:Response){
      try{
         const {username,password,email}=req.body;
@@ -31,6 +33,7 @@ export async function SignUp(req:Request,res:Response){
 export async function SignIn(req:Request,res:Response){
      try{
         const {username,password}=req.body;
+        console.log(req.body);
         const user=await UserModel.findOne({username});
         if(!user){
             return res.status(400).json({message:"User not found"});
@@ -39,7 +42,7 @@ export async function SignIn(req:Request,res:Response){
         if(!isCorrect){
             return res.status(400).json({message:"Incorrect password"});
         }
-        const token=jwt.sign({id:user._id},process.env.JWT_SECRET as string,{expiresIn:"1d"});
+        const token=jwt.sign({username:user.username},Jwt_Secret as string,{expiresIn:"1h"});
         return res.status(200).json({token,message:"User logged in successfully"});
 
 
@@ -52,7 +55,7 @@ export async function SignIn(req:Request,res:Response){
 export async function UpdateUser(req:Request,res:Response){
       try{
         const updatedata=req.body;
-        const username=req.query.username as string;
+        const username=req.params.username as string;
 
         const user=await UserModel.findOne({username});
         if(!user){
@@ -74,7 +77,7 @@ export async function UpdateUser(req:Request,res:Response){
 
 export async function DeleteUser(req:Request,res:Response){
     try{
-        const username=req.query.username as string
+        const username=req.params.username as string
         const user=await UserModel.findOneAndDelete({username});
         if(!user){
             return res.status(400).json({message:"User not found"});
@@ -90,7 +93,7 @@ export async function DeleteUser(req:Request,res:Response){
 
 export async function GetUser(req:Request,res:Response){
     try{
-        const username=req.query.username as string
+        const username=req.params.username as string
         const isuser=await UserModel.findOne({username});
         if(!isuser){
             return res.status(400).json({message:"User not found"});

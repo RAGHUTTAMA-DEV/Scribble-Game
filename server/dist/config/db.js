@@ -12,12 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.connectDB = exports.PORT = void 0;
+exports.connectDB = exports.Jwt_Secret = exports.PORT = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 exports.PORT = process.env.PORT || 5000;
+exports.Jwt_Secret = "raghu";
 const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const uri = process.env.MONGO_URI || '';
+        const uri = process.env.MONGO_URI || 'mongodb+srv://raghuttama03:samera2007@cluster0.sylhh.mongodb.net/scribble';
         yield mongoose_1.default.connect(uri);
         console.log('MongoDB connected successfully');
     }
