@@ -51,8 +51,20 @@ export async function SignIn(req:Request,res:Response){
 
 export async function UpdateUser(req:Request,res:Response){
       try{
-        const {username,password,email,bio,avatar,}=req.body;
+        const updatedata=req.body;
+        const username=req.query.username as string;
+
+        const user=await UserModel.findOne({username});
+        if(!user){
+            return res.status(400).json({message:"User not found"});
+        }
+        const updatedUser=await UserModel.findOneAndUpdate(
+            { username },
+            { $set: { ...updatedata } },
+            { new: true }
+        );
         
+        return res.status(200).json({updatedUser,message:"User updated successfully"});
       
       }catch(error:any){
         console.log("Error internal issuse",error);
@@ -60,10 +72,39 @@ export async function UpdateUser(req:Request,res:Response){
       }
 }
 
-export function DeleteUser(){
+export async function DeleteUser(req:Request,res:Response){
+    try{
+        const username=req.query.username as string
+        const user=await UserModel.findOneAndDelete({username});
+        if(!user){
+            return res.status(400).json({message:"User not found"});
+        }
 
+        return res.status(200).json({message:"User deleted successfully"});
+
+    }catch(error:any){
+        console.log("Error internal issuse",error);
+        res.status(500).json({message:"Internal server error"});
+    }
 }
 
-export function GetUser(){
+export async function GetUser(req:Request,res:Response){
+    try{
+        const username=req.query.username as string
+        const isuser=await UserModel.findOne({username});
+        if(!isuser){
+            return res.status(400).json({message:"User not found"});
+        }
+        const user=await UserModel.findOne({username}).select("-password -__v -createdAt -updatedAt");
+        if(!user){
+            return res.status(400).json({message:"User not found"});
+        }
+        return res.status(200).json({user,message:"User fetched successfully"});
 
+
+ 
+    }catch(error:any){
+        console.log("Error internal issuse",error);
+        res.status(500).json({message:"Internal server error"});
+    }
 }
