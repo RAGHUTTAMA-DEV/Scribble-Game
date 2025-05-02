@@ -1,7 +1,28 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
+interface IUser extends Document {
+    username: string;
+    email: string;
+    password: string;
+    stats: {
+      gamesPlayed: number;
+      gamesWon: number;
+      totalPoints: number;
+      correctGuesses: number;
+      wordsDrawn: number;
+    };
+    profile: {
+      avatar?: string;
+      bio?: string;
+      displayName?: string;
+    };
+    friends: Schema.Types.ObjectId[];
+    status: 'online' | 'offline' | 'in-game' | 'away';
+    currentGameId?: Schema.Types.ObjectId;
+    comparePassword(candidatePassword: string): Promise<boolean>;
+  }
 
-const UserSchema = new Schema({
+const UserSchema = new Schema<IUser>({
     username: {
         type: String,
         required: true,

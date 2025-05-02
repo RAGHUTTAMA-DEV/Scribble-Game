@@ -104,14 +104,14 @@ GameSchema.methods.getCurrentRound = function() {
 };
 
 // Check if a user is the current drawer
-GameSchema.methods.isDrawer = function(userId:any) {
+GameSchema.methods.isDrawer = function(userId:Schema.Types.ObjectId) {
     const currentRound = this.getCurrentRound();
     return currentRound && 
            currentRound.drawer.toString() === userId.toString();
 };
 
 // Add a guess to the current round
-GameSchema.methods.addGuess = function(userId:Schema.Types.ObjectId, guessText:String) {
+GameSchema.methods.addGuess = function(userId:Schema.Types.ObjectId, guessText:string) {
     if (this.status !== 'playing') return false;
     
     const round = this.getCurrentRound();
@@ -126,12 +126,13 @@ GameSchema.methods.addGuess = function(userId:Schema.Types.ObjectId, guessText:S
     // Calculate points based on time elapsed since round started
     let pointsEarned = 0;
     if (isCorrect) {
-        const now = new Date();
+        const now:any = new Date();
         const elapsedSeconds = (now - round.startTime) / 1000;
         // Points decrease as time passes (max 100 points)
         pointsEarned = Math.max(10, Math.floor(100 - (elapsedSeconds / round.duration) * 90));
         
         // Update player score
+        //@ts-ignore
         const playerIndex = this.players.findIndex(p => 
             p.userId.toString() === userId.toString());
         
@@ -140,6 +141,7 @@ GameSchema.methods.addGuess = function(userId:Schema.Types.ObjectId, guessText:S
         }
         
         // Add points for drawer too
+        //@ts-ignore
         const drawerIndex = this.players.findIndex(p => 
             p.userId.toString() === round.drawer.toString());
         
@@ -165,7 +167,7 @@ GameSchema.methods.addGuess = function(userId:Schema.Types.ObjectId, guessText:S
 };
 
 // Start next round
-GameSchema.methods.startNextRound = function(word:any, drawerId:any) {
+GameSchema.methods.startNextRound = function(word:String, drawerId:Schema.Types.ObjectId) {
     this.currentRound++;
     
     if (this.currentRound >= this.rounds.length) {
@@ -174,7 +176,8 @@ GameSchema.methods.startNextRound = function(word:any, drawerId:any) {
         
         // Calculate final rankings
         this.players.sort((a:any, b:any) => b.score - a.score);
-        this.players.forEach((player:any, index:any) => {
+        //@ts-ignore
+        this.players.forEach((player, index) => {
             player.ranking = index + 1;
         });
         

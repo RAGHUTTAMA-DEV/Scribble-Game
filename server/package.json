@@ -12,9 +12,12 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@types/jsonwebtoken": "^9.0.9",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.14.1",
+    "socket.io": "^4.8.1",
     "typescript": "^5.8.3"
   },
   "devDependencies": {
