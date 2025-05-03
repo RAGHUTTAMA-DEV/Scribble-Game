@@ -1,11 +1,23 @@
-import { Server, Socket } from "socket.io";
+import { Socket } from "socket.io";
 
-const connectSocket = (io:Server)=>{
-    io.on('connection',(socket:Socket)=>{
-        console.log("Client conntected",socket.id);
-        socket.emit("Hello")
-        
-    })
+export function Connect(socket: Socket) {
+  console.log("Client connected:", socket.id);
+
+  // Send message to client
+  socket.emit('HEllo', 'Hello from server!');
+
+  // Listen for messages from client
+  socket.on('message', (data) => {
+    console.log('Message from client:', data);
+    socket.broadcast.emit('message', data);
+  });
+
+  // Handle disconnect inside socket
+  socket.on('disconnect', () => {
+    Disconnect(socket);
+  });
 }
 
-export default connectSocket;
+export function Disconnect(socket: Socket) {
+  console.log("Client disconnected:", socket.id);
+}

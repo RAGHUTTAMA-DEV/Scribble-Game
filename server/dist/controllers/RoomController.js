@@ -8,13 +8,30 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createRoom = createRoom;
 exports.joinRoom = joinRoom;
 exports.leaveRoom = leaveRoom;
 exports.startGame = startGame;
+const RoomModel_1 = __importDefault(require("../models/RoomModel"));
+const GameModel_1 = __importDefault(require("../models/GameModel"));
 function createRoom(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { roomName, settings } = req.body;
+            const user = yield GameModel_1.default.findOne({ roomName });
+            const GameId = user === null || user === void 0 ? void 0 : user._id;
+            yield RoomModel_1.default.create({
+                roomName, settings,
+            });
+            //socket call
+        }
+        catch (error) {
+            console.error("Internal serer issuse");
+        }
     });
 }
 function joinRoom(req, res) {

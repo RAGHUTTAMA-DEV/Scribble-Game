@@ -166,7 +166,7 @@ GameSchema.methods.addGuess = function(userId:Schema.Types.ObjectId, guessText:s
     };
 };
 
-// Start next round
+
 GameSchema.methods.startNextRound = function(word:String, drawerId:Schema.Types.ObjectId) {
     this.currentRound++;
     

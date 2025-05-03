@@ -186,7 +186,6 @@ GameSchema.methods.addGuess = function (userId, guessText) {
         pointsEarned
     };
 };
-// Start next round
 GameSchema.methods.startNextRound = function (word, drawerId) {
     this.currentRound++;
     if (this.currentRound >= this.rounds.length) {

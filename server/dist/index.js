@@ -17,7 +17,9 @@ const db_1 = require("./config/db");
 const cors_1 = __importDefault(require("cors"));
 const socket_io_1 = require("socket.io");
 const AuthRoutes_1 = __importDefault(require("./routes/AuthRoutes"));
+const sockets_1 = require("./sockets");
 const http_1 = __importDefault(require("http"));
+const UserRoutes_1 = __importDefault(require("./routes/UserRoutes"));
 const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server, {
@@ -26,10 +28,8 @@ const io = new socket_io_1.Server(server, {
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use('/api/auth', AuthRoutes_1.default);
-io.on('connection', (socket) => {
-    console.log('a user connected');
-    socket.emit('HEllo');
-});
+app.use('/api/room', UserRoutes_1.default);
+(0, sockets_1.initSocket)(io);
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
