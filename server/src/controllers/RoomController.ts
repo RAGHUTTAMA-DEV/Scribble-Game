@@ -1,6 +1,11 @@
 import { Request, Response } from 'express';
 export async function createRoom(req:Request,res:Response){
-     
+     try{
+        const 
+
+     }catch(error){
+        console.error("Internal serer issuse")
+     }
 }
 
 export async function joinRoom(req:Request,res:Response){

@@ -4,11 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const UserController_1 = require("../controllers/UserController");
+const RoomController_1 = require("../controllers/RoomController");
 const router = express_1.default.Router();
-router.post('/signup', UserController_1.SignUp);
-router.post('/signin', UserController_1.SignIn);
-router.put('/update/:username', UserController_1.UpdateUser);
-router.delete('/delete/:username', UserController_1.DeleteUser);
-router.get('/get/:username', UserController_1.GetUser);
+router.post('/create-room/', RoomController_1.createRoom);
+router.post('join-room/:roomName', RoomController_1.joinRoom);
+router.post('/leave-room/:roomName', RoomController_1.leaveRoom);
+router.post('/start-game/:roomName', RoomController_1.startGame);
 exports.default = router;

@@ -12,35 +12,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
+exports.default = auth;
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const db_1 = require("./config/db");
-const cors_1 = __importDefault(require("cors"));
-const socket_io_1 = require("socket.io");
-const AuthRoutes_1 = __importDefault(require("./routes/AuthRoutes"));
-const http_1 = __importDefault(require("http"));
-const app = (0, express_1.default)();
-const server = http_1.default.createServer(app);
-const io = new socket_io_1.Server(server, {
-    cors: { origin: '*' }
-});
-app.use((0, cors_1.default)());
-app.use(express_1.default.json());
-app.use('/api/auth', AuthRoutes_1.default);
-io.on('connection', (socket) => {
-    console.log('a user connected');
-    socket.emit('HEllo');
-});
-function main() {
+function auth(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            yield (0, db_1.connectDB)();
-            server.listen(db_1.PORT, () => {
-                console.log(`Server is running on port ${db_1.PORT}`);
-            });
+        var _a;
+        const token = (_a = req.headers['authorization']) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: "Unauthorized" });
         }
-        catch (error) {
-            console.log("Error internal issuse", error);
-        }
+        yield jsonwebtoken_1.default.verify(token, db_1.Jwt_Secret, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ message: "Unauthorized" });
+            }
+            req.body.user = decoded;
+            next();
+        });
     });
 }
-main();
